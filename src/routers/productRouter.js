@@ -37,7 +37,7 @@ router.delete("/:id", verfyTokenAndAdmin, async (req, res, next) => {
 });
 
 //get product
-router.get("/:id", async (req, res, next) => {
+router.get("/find/:id", async (req, res, next) => {
   try {
     const product = await Product.findById(req.params.id);
     if (product?._id) {
@@ -52,21 +52,29 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
-router.get("/", async (req, res) => {
+router.get("/", async (req, res, next) => {
   const qNew = req.query.new;
   const qCategory = req.query.category;
+
   try {
     let products;
     if (qNew) {
       products = await Product.find().sort({ createdAt: -1 }.limit(5));
     } else if (qCategory) {
       products = await Product.find({
-        caregories: { $in: [qCategory] },
+        categories: { $in: [qCategory] },
       });
     } else {
-      products = await products.find();
+      products = await Product.find();
     }
-  } catch (error) {}
+    res.json({
+      status: "success",
+      message: "fetched products",
+      products,
+    });
+  } catch (error) {
+    next(error);
+  }
 });
 router.put("/:id", verfyTokenAndAdmin, async (req, res, next) => {
   try {
