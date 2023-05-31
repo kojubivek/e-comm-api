@@ -1,8 +1,8 @@
 import jwt from "jsonwebtoken";
 
 export const verifyToken = (req, res, next) => {
-  const authHeader = req.headers.token;
-  console.log(authHeader);
+  const authHeader = req.headers.authorization;
+  console.log(authHeader, "tokensss");
   if (authHeader) {
     const token = authHeader.split(" ")[1];
 
@@ -33,7 +33,9 @@ export const verfyTokenAndAuthorization = (req, res, next) => {
 };
 
 export const verfyTokenAndAdmin = (req, res, next) => {
+  console.log(req.headers, "sss");
   verifyToken(req, res, () => {
+    console.log(req.user, "hit admin");
     if (req.user?.isAdmin) {
       next();
     } else {

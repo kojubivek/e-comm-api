@@ -61,4 +61,43 @@ router.get("/:id", verfyTokenAndAdmin, async (req, res, next) => {
   }
 });
 
+router.get("/:id", verfyTokenAndAdmin, async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.id);
+    if (user?._id) {
+      res.json({
+        status: "success",
+        message: "userFound",
+        user,
+      });
+    }
+  } catch (error) {
+    next(error);
+  }
+});
+router.get("/", async (req, res, next) => {
+  console.log(req.query.new, "hit");
+  const qNew = req.query.new;
+  const quser = req.query.user;
+
+  try {
+    let users;
+    if (qNew) {
+      users = await User.find().sort({ createdAt: -1 }).limit(5);
+    } else if (quser) {
+      users = await User.find({
+        users: { $in: [quser] },
+      });
+    } else {
+      users = await User.find();
+    }
+    res.json({
+      status: "success",
+      message: "fetched users",
+      users,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
 export default router;

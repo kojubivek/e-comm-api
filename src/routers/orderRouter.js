@@ -70,7 +70,9 @@ router.get("/find/:id", verfyTokenAndAuthorization, async (req, res, next) => {
 
 router.get("/", verfyTokenAndAdmin, async (req, res, next) => {
   try {
+    console.log("order hit");
     const orders = await Order.find();
+
     if (orders) {
       res.json({
         status: "success",
@@ -86,19 +88,28 @@ router.get("/", verfyTokenAndAdmin, async (req, res, next) => {
 ///get Monthly income
 
 router.get("/income", verfyTokenAndAdmin, async (req, res, next) => {
+  const productId = req.query.pid;
   const date = new Date();
   const lastMonth = new Date(date.setMonth(date.getMonth() - 1));
   const previousMonth = new Date(new Date().setMonth(lastMonth.getMonth() - 1));
 
   try {
     const income = await Order.aggregate([
-      { $match: { createAt: { $gte: previousMonth } } },
+      {
+        $match: {
+          createdAt: { $gte: previousMonth },
+          ...(productId && {
+            products: { $elemMatch: { productId } },
+          }),
+        },
+      },
       {
         $project: {
-          month: { $month: "$created At" },
+          month: { $month: "$createdAt" },
           sales: "$amount",
         },
-
+      },
+      {
         $group: {
           _id: "$month",
           total: { $sum: "$sales" },

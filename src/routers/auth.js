@@ -17,13 +17,16 @@ router.post("/register", async (req, res, next) => {
   const newUser = new User({
     username: req.body.username,
     email: req.body.email,
+
     password: CryptoJS.AES.encrypt(
       req.body.password,
       process.env.Pass_KEY
     ).toString(),
   });
+  console.log(newUser), "new user";
   try {
     const savedUser = await newUser.save();
+    console.log("hitheer");
     res.json({
       status: "success",
       message: "user created",

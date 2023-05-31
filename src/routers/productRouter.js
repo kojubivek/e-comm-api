@@ -5,6 +5,7 @@ import {
   verifyToken,
 } from "./verifyToken.js";
 import Product from "../models/Product.js";
+import mongoose from "mongoose";
 
 const router = express.Router();
 
@@ -25,8 +26,10 @@ router.post("/", verfyTokenAndAdmin, async (req, res, next) => {
 
 //delete
 router.delete("/:id", verfyTokenAndAdmin, async (req, res, next) => {
+  const id = new mongoose.Types.ObjectId(req.params.id);
+
   try {
-    await Product.findByIdAndDelete(req.params.id);
+    await Product.findByIdAndDelete(id);
     res.json({
       status: "success",
       message: "product deleted",
