@@ -4,20 +4,20 @@ import {
   verfyTokenAndAuthorization,
   verifyToken,
 } from "./verifyToken.js";
-import Product from "../models/Product.js";
+import Product from "../models/product/ProductSchema.js";
 import mongoose from "mongoose";
+import { createProduct } from "../models/product/ProductModel.js";
 
 const router = express.Router();
 
 //crate
 router.post("/", verfyTokenAndAdmin, async (req, res, next) => {
-  const newProduct = new Product(req.body);
   try {
-    const savedProduct = await newProduct.save();
+    const data = await createProduct(req.body);
     res.json({
       status: "success",
       message: "product saved",
-      savedProduct,
+      data,
     });
   } catch (error) {
     next(error);
@@ -80,6 +80,7 @@ router.get("/", async (req, res, next) => {
   }
 });
 router.put("/:id", verfyTokenAndAdmin, async (req, res, next) => {
+  console.log(req.params.id, req.body);
   try {
     const updateProduct = await Product.findByIdAndUpdate(
       req.params.id,

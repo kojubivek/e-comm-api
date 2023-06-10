@@ -16,6 +16,8 @@ import productRouter from "./src/routers/productRouter.js";
 import cartRouter from "./src/routers/cartRouter.js";
 import orderRouter from "./src/routers/orderRouter.js";
 import stripeRouter from "./src/routers/stripeRouter.js";
+import categoryRouter from "./src/routers/catRouter.js";
+
 app.use("/api/v1/products", productRouter);
 app.use("/api/v1/auth", authRouter);
 
@@ -24,7 +26,7 @@ app.use("/api/v1/users", userRouter);
 app.use("/api/v1/cart", cartRouter);
 app.use("/api/v1/order", orderRouter);
 app.use("/api/v1/checkout", stripeRouter);
-
+app.use("/api/v1/category", categoryRouter);
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send(err.message);
