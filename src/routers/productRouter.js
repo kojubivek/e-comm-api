@@ -6,7 +6,10 @@ import {
 } from "./verifyToken.js";
 import Product from "../models/product/ProductSchema.js";
 import mongoose from "mongoose";
-import { createProduct } from "../models/product/ProductModel.js";
+import {
+  createProduct,
+  getSelectedProduct,
+} from "../models/product/ProductModel.js";
 
 const router = express.Router();
 
@@ -48,6 +51,31 @@ router.get("/find/:id", async (req, res, next) => {
         status: "success",
         message: "userFound",
         product,
+      });
+    }
+  } catch (error) {
+    next(error);
+  }
+});
+//get producrts parentcat
+router.get("/:id", async (req, res, next) => {
+  const id = req.params.id;
+
+  try {
+    const products = await Product.find({ parentCat: id });
+    console.log(products, "products");
+
+    if (products.length > 0) {
+      res.json({
+        status: "success",
+        message: "Products found",
+        products,
+      });
+    } else {
+      res.json({
+        status: "success",
+        message: "No products found",
+        products: [],
       });
     }
   } catch (error) {

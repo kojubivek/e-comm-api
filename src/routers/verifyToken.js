@@ -8,9 +8,10 @@ export const verifyToken = (req, res, next) => {
 
     jwt.verify(token, process.env.JWT_KEY, (err, user) => {
       if (err) {
+        console.log(err);
         next(err);
       }
-
+      console.log(user, user);
       req.user = user;
       next();
     });
@@ -33,7 +34,6 @@ export const verfyTokenAndAuthorization = (req, res, next) => {
 };
 
 export const verfyTokenAndAdmin = (req, res, next) => {
-  console.log(req.headers, "sss");
   verifyToken(req, res, () => {
     console.log(req.user, "hit admin");
     if (req.user?.isAdmin) {

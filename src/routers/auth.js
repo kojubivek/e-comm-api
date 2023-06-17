@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import CryptoJS from "crypto-js";
 import User from "../models/User.js";
 import jwt from "jsonwebtoken";
+
 const router = express.Router();
 dotenv.config();
 
@@ -15,6 +16,10 @@ router.get("/", (req, res, next) => {
 
 router.post("/register", async (req, res, next) => {
   const newUser = new User({
+    firstname: req.body.firstname,
+    lastname: req.body.lastname,
+    middlename: req.body.middlename,
+
     username: req.body.username,
     email: req.body.email,
 
@@ -47,7 +52,7 @@ router.post("/login", async (req, res, next) => {
   try {
     console.log(req.body);
     const user = await User.findOne({ username: req.body.username });
-
+    console.log(user, "user");
     if (user?.id) {
       const hasedPassword = CryptoJS.AES.decrypt(
         user.password,

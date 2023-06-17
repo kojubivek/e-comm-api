@@ -12,7 +12,7 @@ const router = express.Router();
 router.post("/", async (req, res, next) => {
   try {
     const category = req.body;
-    console.log(category, "cat");
+
     const data = await createNewCategory(category);
     if (data?.id) {
       res.json({
@@ -29,7 +29,7 @@ router.post("/", async (req, res, next) => {
 router.get("/", async (req, res, next) => {
   try {
     const data = await readCategories();
-    console.log(data, "catdadta");
+
     if (data) {
       res.json({
         status: "success",
