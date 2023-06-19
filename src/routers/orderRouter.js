@@ -55,12 +55,13 @@ router.delete("/:id", verfyTokenAndAdmin, async (req, res, next) => {
 
 router.get("/find/:id", verfyTokenAndAuthorization, async (req, res, next) => {
   try {
-    const order = await Order.findOne({ userId: req.params.userId });
-    if (order?._id) {
+    const order = await Order.find({ userId: req.params.id });
+
+    if (order) {
       res.json({
         status: "success",
         message: "oreder Found",
-        Order,
+        order,
       });
     }
   } catch (error) {
